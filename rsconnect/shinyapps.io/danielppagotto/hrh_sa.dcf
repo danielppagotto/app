@@ -1,0 +1,12 @@
+name: hrh_sa
+title: hrh_sa
+username: danielppagotto
+account: danielppagotto
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 10021381
+bundleId:
+url: https://danielppagotto.shinyapps.io/hrh_sa/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
