@@ -4,15 +4,17 @@ library(shiny)
 library(bslib)
 library(readxl)
 library(geojsonio)
+library(vroom)
 
 
 # Reading Data ------------------------------------------------------------
 
-phc_services <- read_excel("bases/input_shiny.xlsx")
-procedures_professional <- read_excel("bases/procedures_prof_shiny.xlsx")
-qtt_professional <- read_excel("bases/qtt_prof_shiny.xlsx")
-oferta_GO <- read_excel("bases/supply_shiny.xlsx")
-producao_SISAB <- read_excel("bases/sisab_shiny.xlsx")
+phc_services <- vroom("https://raw.githubusercontent.com/danielppagotto/app/master/bases/input_shiny.csv")
+procedures_professional <- vroom("https://raw.githubusercontent.com/danielppagotto/app/master/bases/procedures_prof_shiny.csv")
+qtt_professional <- vroom("https://raw.githubusercontent.com/danielppagotto/app/master/bases/qtt_prof_shiny.csv")
+producao_SISAB <- vroom("https://raw.githubusercontent.com/danielppagotto/app/master/bases/sisab_shiny.csv")
+oferta_GO <- vroom("https://raw.githubusercontent.com/danielppagotto/app/master/bases/supply_shiny.csv")
+
 
 # Preparing APP -----------------------------------------------------------
 
@@ -123,8 +125,8 @@ server <- function(input, output) {
         oferta_2 <- 
           
           oferta_GO |>
-          
-          mutate(cod_regsaud = as.character(cod_regsaud)) |>
+          # as.character
+          mutate(cod_regsaud = (cod_regsaud)) |>
           mutate(ano_mes = ym(COMPETEN)) |>
           mutate(horas = HORAOUTR + HORAHOSP + HORA_AMB) |>
           mutate(prof = if_else(substr(CBO, 1, 4) == "2235", 
@@ -153,9 +155,10 @@ server <- function(input, output) {
             liquido = round(liquido, 2)
           )
         
-        demanda_2$ibge <- as.character(demanda_2$ibge)
+       # demanda_2$ibge <- as.character(demanda_2$ibge)
         
         demanda_oferta_2 <- demanda_2 |>
+          
           left_join(oferta_2, 
                     by = c("ibge" = "cod_regsaud", 
                            "categoria" = "prof", 
@@ -178,6 +181,7 @@ server <- function(input, output) {
         cenario <- demanda_oferta_2 |>  
           mutate(percentage = (oferta * 100)/demanda,
                  percentage = round(percentage, 2)) |> 
+          
           mutate(id = as.integer(ibge)) |> 
           select(id, regiao_saude, categoria, 
                  resultado, percentage)

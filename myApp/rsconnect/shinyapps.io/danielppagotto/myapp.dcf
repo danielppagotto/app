@@ -1,0 +1,10 @@
+name: myapp
+title:
+username: danielppagotto
+account: danielppagotto
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 10032872
+bundleId: 7743304
+url: https://danielppagotto.shinyapps.io/myapp/
+version: 1
